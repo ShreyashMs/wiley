@@ -12,13 +12,28 @@ public class ShoppingCartSerialization {
             System.err.println("Error occurred during serialization: " + ex.getMessage());
         }
     }
-
+    public static ShoppingCart deserializeShoppingCart(String filename) {
+        ShoppingCart cart = null;
+        try (InputStream inputStream = new FileInputStream(filename);
+             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
+            cart = (ShoppingCart) objectInputStream.readObject();
+            System.out.println("Shopping cart deserialized successfully from " + filename);
+        } catch (IOException | ClassNotFoundException ex) {
+            System.err.println("Error occurred during deserialization: " + ex.getMessage());
+        }
+        return cart;
+    }
     public static void main(String[] args) {
         ShoppingCart cart = new ShoppingCart();
-        cart.addProduct(new Product("Laptop", 1000));
-        cart.addProduct(new Product("Phone", 500));
+        cart.addProduct(new Product("Laptop", 50000));
+        cart.addProduct(new Product("mobilee", 20000));
 
         String filename = "ShoppingCart.ser";
-        serializeShoppingCart(cart, filename);
+//        serializeShoppingCart(cart, filename);
+        ShoppingCart deserializedCart = deserializeShoppingCart(filename);
+        if (deserializedCart != null) {
+            System.out.println("Deserialized Shopping Cart:");
+            System.out.println(deserializedCart);
+        }
     }
 }
